@@ -1,6 +1,6 @@
 // src/App.js
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './App.css'
 import './Stepper.css'
 import { fetchCatalog } from './services/api';
@@ -8,7 +8,6 @@ import Select from 'react-select';
 import { Modal, Button } from 'react-bootstrap';
 import { FaExclamationTriangle } from 'react-icons/fa';
 import AvisoPrivacidad from "./components/AvisoPrivacidad";
-// import CheckBoxContitional from "./components/Inputs/CheckBoxConditional";
 
 
 const App = ( params ) => {
@@ -23,25 +22,9 @@ const App = ( params ) => {
     const [binaryFiles, setBinaryFiles] = useState([]);
     const [renderedChildren, setRenderedChildren] = useState({});
     const [activeSelection, setActiveSelection] = useState(null); 
-    const [actualSelectedValue, setActualSelectedValue] = useState(null)
-    
-    const [renderedForm, setRenderedForm] = useState({});
-    
 
     const [show, setShow] = useState(false);
     const [trackingCode, setTrackingCode] = useState('123456'); // Aquí debes establecer 
-
-    const [estructura, setEstructura] = useState({});
-    const estructuraRef = useRef(estructura);
-
-      useEffect(() => {
-        estructuraRef.current = estructura; // Mantén el ref sincronizado con el estado.
-      }, [estructura]);
-
-    // Usamos useState para almacenar las claves rendereadas en el estado
-   const [renderedKeys, setRenderedKeys] = useState(new Set());
-
-   const renderedKeysRef = useRef(new Set());
 
     const handleClose = () => {
       setShow(false);
@@ -55,7 +38,6 @@ const App = ( params ) => {
       setCurrentStep(0);
       setFieldValues({});
       setBinaryFiles([]);
-      setRenderedForm(steps);
     }
 
     useEffect(() => {
@@ -134,26 +116,6 @@ const App = ( params ) => {
       }
     }, []);
 
-    useEffect(() => {
-        const handlePopState = (event) => {
-            // Retroceder un paso en el stepper
-            setCurrentStep((prevStep) => Math.max(prevStep - 1, 0));
-        };
-
-        // Agregar estado inicial al historial
-        window.history.pushState({ step: currentStep }, null, "");
-
-        const updateHistory = () => {
-            window.history.pushState({ step: currentStep }, null, "");
-        };
-
-        // Escuchar el evento popstate
-        window.addEventListener("popstate", handlePopState);
-
-        return () => {
-            window.removeEventListener("popstate", handlePopState);
-        };
-    }, [currentStep]);
     
 
     // Función para obtener la estructura del formulario
@@ -162,7 +124,6 @@ const App = ( params ) => {
           const response = await fetch('https://djaguar.herokuapp.com/odoo_com_sistemaetico_grupobd/api/form/retrieve/current-report/?lg=es');
           const data = await response.json();
           setSteps(data.stepers);
-          setRenderedForm(data.stepers);
       } catch (error) {
           console.error('Error al obtener la estructura del formulario:', error);
       } finally {
@@ -261,7 +222,7 @@ const App = ( params ) => {
   }, []);
 
   const updateFieldConditionals = useCallback((fieldId, newConditional) => {
-      return setSteps(prevSteps => {
+      setSteps(prevSteps => {
           const updatedSteps = [...prevSteps];
           const step = updatedSteps[currentStep];
           const updatedForm = {
@@ -277,7 +238,6 @@ const App = ( params ) => {
               ...updatedSteps.slice(currentStep + 1),
           ];
       });
-
   }, [currentStep, updateConditionalsInFields]);
 
   const handleValueChange = useCallback(async (field, value, parent) => {
@@ -381,24 +341,13 @@ const App = ( params ) => {
           }
       });
   }, [currentStep, steps, setFormDataValues, fieldValues]);
-  
 
 
   const handleInputChange = useCallback(async (field, value, parent, changeFormData = true ) => {
 
-    const keyVal = value.path_locales ?? value;
     const fieldId = field.key;
 
-    console.log("step", currentStep);
-    console.log("field", field);
-    console.log("value", keyVal);
-    console.log("parent", parent);
-    console.log("renderedForm", renderedForm[currentStep].form['json-schema']);
-
-    console.log('has cond?', field.conditionals);
-
-
-  handleValueChange( field, value, parent );
+    handleValueChange( field, value, parent );
 
     if( changeFormData ){
       setFormData(prevFormData => ({
@@ -436,110 +385,32 @@ const App = ( params ) => {
                       ...(catalogs[path_locales] ? {} : { [path_locales]: updatedCatalogData })
                   }));
 
-                  const nestChildren = [{
-                    key: path_locales,
-                    originalKey: field.key,
-                    grid: 6,
-                    type: "catalog-select",
-                    break: false,
-                    isOwn,
-                    label,
-                    path_locales,
-                    hidden: false,
-                    required: true,
-                    catalogue,
-                    sensitive: false,
-                    placeholder: "Texto de apoyo"
-                }]
-
                   const newConditional = {
                       caseOf: path_locales,
-                      nestChildren: nestChildren
+                      nestChildren: [{
+                          key: path_locales,
+                          originalKey: field.key,
+                          grid: 6,
+                          type: "catalog-select",
+                          break: false,
+                          isOwn,
+                          label,
+                          path_locales,
+                          hidden: false,
+                          required: true,
+                          catalogue,
+                          sensitive: false,
+                          placeholder: "Texto de apoyo"
+                      }]
                   };
 
                   updateFieldConditionals(fieldId, newConditional);
-
               }
           } catch (error) {
               console.error("Error fetching catalog data:", error);
           }
       }
-
-      const fieldKey = field.key; // Reemplaza esto por el key que buscas
-    
-          // Función recursiva para buscar el elemento
-          const findField = (items, key) => {
-              for (const item of items) {
-                  if (item.key === key) {
-                      return item;
-                  }
-                  if (item.children && Array.isArray(item.children)) {
-                      const found = findField(item.children, key);
-                      if (found) return found;
-                  }
-              }
-              return null;
-          };
-          const thisField = findField(steps[currentStep].form['json-schema'], fieldKey);
-          console.log('updatedField', thisField)
-
-      // START Add child to renderedForm
-    if( field.conditionals ){
-      console.log('has caseOf?', field.conditionals.some(conditional => conditional.caseOf === keyVal));
-
-      const match = field.conditionals.find(conditional => conditional.caseOf === keyVal);
-
-      if( match ){
-        const children = match.nestChildren;
-        console.log(field.key, 'has conditional', keyVal);
-
-        setRenderedForm((prevState) => {
-            // Crea una copia del estado actual
-            const newState = [...prevState];
-    
-            // Encuentra el elemento dentro de 'json-schema' cuyo key coincida con parent.key
-            const parentKey = field.key; // Reemplaza esto por el key que buscas
-    
-            // Función recursiva para buscar el elemento
-            const findElement = (items, key) => {
-                for (const item of items) {
-                    if (item.key === key) {
-                        return item;
-                    }
-                    if (item.children && Array.isArray(item.children)) {
-                        const found = findElement(item.children, key);
-                        if (found) return found;
-                    }
-                }
-                return null;
-            };
-    
-            const jsonSchema = newState[currentStep].form['json-schema'];
-            const parentElement = findElement(jsonSchema, parentKey);
-    
-            // Si se encuentra el elemento, modifica o agrega 'children'
-            if (parentElement) {
-              if (!parentElement.children) {
-                  parentElement.children = [];
-              }
-    
-              // Agrega o actualiza el valor de 'a' dentro de 'children'
-              /// Agrega o actualiza el valor de 'a' dentro de 'children'
-              parentElement.children = children;
-            }
-    
-            
-        
-            // Devuelve el nuevo estado
-            console.log(newState);
-            return newState;
-        });
-      }
-    }
-  console.log(field.key, parent);
   }, [catalogs, updateFieldConditionals, handleValueChange]);
-
-  
 
   const handleFileChange = (field, event) => {
 
@@ -552,26 +423,15 @@ const App = ( params ) => {
 
   const handleNextStep = () => {
       const fields = steps[currentStep]?.form["json-schema"] || [];
-      let isValid = fields.every(field => {
-          console.log("key:", field.key);
-          console.log("valor:", formData[field.key]);
+      const isValid = fields.every(field => {
           if (field.required && !formData[field.key]) {
               return false;
           }
           return true;
       });
 
-      if( currentStep === 0 ){
-        const privacyCheck = document.getElementById('privacy_check')
-
-        if( !privacyCheck.checked ){
-          isValid = false
-        }
-      }
-
       // setCurrentStep(currentStep + 1);
       if (isValid) {
-          setCurrentStep((prev) => prev + 1);
           setCurrentStep(currentStep + 1);
       } else {
           alert('Por favor, complete todos los campos requeridos.');
@@ -579,7 +439,6 @@ const App = ( params ) => {
   };
 
   const handlePrevStep = () => {
-      setCurrentStep((prev) => Math.max(prev - 1, 0));
       setCurrentStep(currentStep - 1);
   };
 
@@ -620,14 +479,12 @@ const App = ( params ) => {
         });
         const result = await response.json();
         setTrackingCode(result.tracking_code);
-        // handleShow();
-        const trackingCode = result.tracking_code;
-        window.location.href = `confirmacion-denuncia?conf=${trackingCode}`;
+        handleShow();
     } catch (error) {
         alert('Error al enviar el formulario');
     }
 
-  }, [binaryFiles, formDataValues]);
+  }, [formDataValues]);
 
   const InvolvedInput = ({ onChanges, keyDiv }) => {
       const [involved, setInvolved] = useState([]);
@@ -649,20 +506,10 @@ const App = ( params ) => {
       };
 
       const handleAddInvolved = () => {
-
-        const name = document.getElementById('involved-name')
-        const occupation = document.getElementById('involved-occupation')
-        const type = document.getElementById('involved-type')
-
-        if( name.value === "" || occupation.value === "" || type.value === "" ){
-          alert('Por favor, complete todos los campos requeridos para agregar a los involucrados.');
-          return;
-        }
-
         const newInvolved = [...involved, currentInput];
         console.log(newInvolved, involved);
           setInvolved(newInvolved);
-          setCurrentInput({ name: '', occupation: '', type: '' }); // Limpiar input después de agregar
+          setCurrentInput({ name: '', occupation: '', type: 'Afectado' }); // Limpiar input después de agregar
 
           if (onChanges) {
               onChanges(newInvolved); // Llamar a onChange con el array actualizado
@@ -680,20 +527,7 @@ const App = ( params ) => {
 
       return (
           <div>
-              <div className="form-group involucrado">
-                  <select
-                          name="type"
-                          value={currentInput.type}
-                          onChange={handleInputChange}
-                          className="form-select label-required"
-                          id="involved-type"
-                      >
-                          <option value="" disabled selected>Tipo de Involucrado</option>
-                          <option value="Afectado">Afectado</option>
-                          <option value="Testigo">Testigo</option>
-                          <option value="Infractor">Infractor</option>
-                          <option value="Complice">Complice</option>
-                  </select>
+              <div className="form-group">
                   <input
                       type="text"
                       name="name"
@@ -701,7 +535,6 @@ const App = ( params ) => {
                       onChange={handleInputChange}
                       placeholder="Nombre del Involucrado"
                       className="form-control"
-                      id="involved-name"
                   />
                   <input
                       type="text"
@@ -710,10 +543,19 @@ const App = ( params ) => {
                       onChange={handleInputChange}
                       placeholder="Ocupación del Involucrado"
                       className="form-control"
-                      id="involved-occupation"
                   />
-                  
-                  <div className="divRight">
+                  <select
+                      name="type"
+                      value={currentInput.type}
+                      onChange={handleInputChange}
+                      className="form-control"
+                  >
+                      <option value="Afectado">Afectado</option>
+                      <option value="Testigo">Testigo</option>
+                      <option value="Infractor">Infractor</option>
+                      <option value="Complice">Complice</option>
+                  </select>
+                  <div className="d-grid gap-2">
                     <button type="button" className="mt-2 btn btn-outline-primary" onClick={handleAddInvolved} >
                         Agregar
                     </button>
@@ -744,7 +586,29 @@ const App = ( params ) => {
                 </div>
               )}
               </div>
-              
+              <Modal show={show} onHide={handleClose} centered>
+                <Modal.Header closeButton>
+                  <Modal.Title>
+                    <FaExclamationTriangle style={{ color: 'red', marginRight: '10px' }} />
+                    IMPORTANTE!
+                  </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <p><strong>Este es tu número de seguimiento: {trackingCode}</strong></p>
+                  <p>Conservar tu número de seguimiento es esencial para realizar seguimiento de tu reporte y acceder a funciones clave como:</p>
+                  <ul>
+                    <li>Consultar el estado actual de tu reporte.</li>
+                    <li>Añadir información adicional.</li>
+                    <li>Subir documentos o evidencias adicionales.</li>
+                    <li>Recibir y responder mensajes importantes de manera anónima con el equipo de atención.</li>
+                  </ul>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleClose}>
+                    Cerrar
+                  </Button>
+                </Modal.Footer>
+              </Modal>
           </div>
       );
   };
@@ -785,38 +649,17 @@ const App = ( params ) => {
   };
   
 const renderPrivacyPolicy = ( value ) => {
-  // console.log('Privacy Policy', value );
+  console.log('Privacy Policy', value );
 }
-
-useEffect(() => {
-  // Limpiar las claves cuando cambien el paso o el valor seleccionado
-  setRenderedKeys(new Set()); // Resetear las claves cuando cambian las condiciones
-}, [currentStep, actualSelectedValue]); // Dependencias que causan un reinicio
-
 
 
 
   // Función de renderizado optimizada para cada tipo de campo
 const renderField = (field, parent) => {
 
-    let actualStruct = estructura
-
     const handleChange = (field, value, additionalProps = {}) => {
-      console.log("Changes made on " + field.key +":", value.key)
         // Maneja el cambio del input, incluyendo el valor y otras propiedades
         handleInputChange(field, value, parent);
-
-        setEstructura((prevEstructura) => {
-          
-          const nuevaEstructura = {
-            ...prevEstructura,
-            [field.key]: value.key
-          }
-
-          return nuevaEstructura
-        })
-
-        setActualSelectedValue(value)
 
         if( field.key === 'C::OWN::centro_de_trabajo' ){
           renderPrivacyPolicy(value.key);
@@ -865,7 +708,7 @@ const renderField = (field, parent) => {
     };
 
     switch (field.type) {
-      case 'string':
+        case 'string':
         case 'subject':
         case 'description':
             return (
@@ -888,8 +731,8 @@ const renderField = (field, parent) => {
             );
         case 'date':
             return (
-                <div key={field.key} className="form-group" field={field.key}>
-                    <label className={'label-required'}>Indica una fecha{ field.key === 'fecha_aproximada' ? ' aproximada' : '' }</label>
+                <div key={field.key} className="form-group">
+                    <label className={`${field.required ? 'label-required' : ''}`} htmlFor={field.key}>{field.label}</label>
                     <input
                         type="date"
                         {...commonProps}
@@ -899,11 +742,11 @@ const renderField = (field, parent) => {
             );
         case 'date-range':
             return (
-                <div key={field.key} className="form-group ">
-                   <label className={'label-required'}>Selecciona entre que fechas sucedieron los hechos</label>
-                    <div className="mb-2 boxed"> 
+                <div key={field.key} className="form-group">
+                    <label className={`${field.required ? 'label-required' : ''}`}>{field.label}</label>
+                    <div className="mb-2">
                         <div>
-                          <label className={'label-required'}>Fecha inicial:</label>
+                          <label>Fecha inicial:</label>
                           <input
                               type="date"
                               className="form-control mr-2"
@@ -931,7 +774,7 @@ const renderField = (field, parent) => {
                   <div className="d-flex">
                     <label className={`${field.required ? 'label-required' : ''}`}>{field.label}</label>
                   </div>
-                  <div className="d-flex flex-wrap justify-content-between fechas">
+                  <div className="d-flex flex-wrap justify-content-between">
                     {(Array.isArray(catalogs[field.key]) ? catalogs[field.key] : []).map(option => (
                         <div key={option.key} className="form-check form-check-inline">
                             <input
@@ -997,10 +840,8 @@ const renderField = (field, parent) => {
             
             
                 handleChange(field, value, parent);
-              };
-              
-              // console.log(field.key)
-              let renderChild = true
+            };
+
 
             return (
               <div key={field.key}>
@@ -1015,17 +856,13 @@ const renderField = (field, parent) => {
                     path={field.path_locales || field.scope}
                     catalogue={field.catalogue}
                     isown={field.isOwn ? "true" : "false"}
-                    onChange={(e) => {
-                      renderChild = (selectedOption?.key || '') === e.key
-                      handleSelection(field, e)
-                    }}
+                    onChange={(e) => handleSelection(field, e)}
                 >
                 </Select>
                 {field.conditionals?.map(conditional => {
                       const selectedPathLocales = fieldValues[field.key]?.path;
-                      // console.log(actualStruct[field?.key], fieldValues[field.key]?.value.key)
-                      if (selectedPathLocales === conditional.caseOf && actualStruct[field?.key] === fieldValues[field.key]?.value.key) {
-                        // console.log('rendered', actualStruct[field?.key])
+
+                      if (selectedPathLocales === conditional.caseOf) {
                           return conditional.nestChildren.map((nestedField) => {
                             // console.log(renderedChildren[field?.key ?? ''] === nestedField.key, field?.key ?? '', nestedField.key);
                               const isAlreadyRendered = renderedChildren[field?.key ?? ''] === nestedField.key;
@@ -1064,7 +901,6 @@ const renderField = (field, parent) => {
                     })}
                 </div>
             );
-
             case 'file':
               return (
                   <div key={field.key} className="form-group">
@@ -1129,7 +965,6 @@ const renderField = (field, parent) => {
     }
   };
 
-
     return (
         <div className="container mt-5">
 
@@ -1143,7 +978,7 @@ const renderField = (field, parent) => {
                     {/* Aquí va el Stepper Visual */}
                     <div className="stepper-wrapper mb-4">
                       {steps.map((step, index) => (
-                        <div key={index} className={`stepper-item ${currentStep > index ? 'completed' : (currentStep < index ? '' : 'focus')}`}>
+                        <div key={index} className={`stepper-item ${currentStep >= index ? 'completed' : ''}`}>
                           <span></span>
                           <span></span>
                           <div className="step-counter">{index + 1 < 10 ? `0${index + 1}` : index + 1}</div>
@@ -1175,30 +1010,6 @@ const renderField = (field, parent) => {
 
               </div>
             </div>
-
-            <Modal show={show} onHide={handleClose} centered>
-              <Modal.Header closeButton>
-                <Modal.Title>
-                  <FaExclamationTriangle style={{ color: 'red', marginRight: '10px' }} />
-                  IMPORTANTE!
-                </Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <p><strong>Este es tu número de seguimiento: {trackingCode}</strong></p>
-                <p>Conservar tu número de seguimiento es esencial para realizar seguimiento de tu reporte y acceder a funciones clave como:</p>
-                <ul>
-                  <li>Consultar el estado actual de tu reporte.</li>
-                  <li>Añadir información adicional.</li>
-                  <li>Subir documentos o evidencias adicionales.</li>
-                  <li>Recibir y responder mensajes importantes de manera anónima con el equipo de atención.</li>
-                </ul>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
-                  Cerrar
-                </Button>
-              </Modal.Footer>
-            </Modal>
           </div>
             
         </div>

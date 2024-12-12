@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="42px" height="33px" viewBox="0 0 42 33" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>new-post</title>
+    <g id="Línea-Ética" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Línea-Ética-|-Consultar-reporte-RESULTADOS" transform="translate(-192, -554)">
+            <g id="new-post" transform="translate(192, 554)">
+                <path d="M32,29 L5,29 C2.2,29 0,26.8 0,24 L0,5 C0,2.2 2.2,0 5,0 L32,0 C34.8,0 37,2.2 37,5 L37,24 C37,26.8 34.8,29 32,29 Z" id="Path" fill="#87C0E3" fill-rule="nonzero"></path>
+                <path d="M40,16 L40,26 C40,28.8 37.8,31 35,31 L8,31 C5.2,31 3,28.8 3,26 L3,23" id="Path" stroke-opacity="0.8" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M3,17 L3,6.87012987 C3,4.14285714 5.2,2 8,2 L35,2 C37.8,2 40,4.14285714 40,6.87012987 L40,8.81818182" id="Path" stroke-opacity="0.8" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M9,12.3933162 L20.4104235,18.7686375 C21.0162866,19.0771208 21.723127,19.0771208 22.3289902,18.7686375 L40,9" id="Path" stroke-opacity="0.8" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+            </g>
+        </g>
+    </g>
+</svg>

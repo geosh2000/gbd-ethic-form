@@ -9,7 +9,7 @@ if (process.env.NODE_ENV === 'development') {
   const rootElement = document.getElementById('root');
   if (rootElement) {
     const root = createRoot(rootElement);
-    root.render(<App unidad="atpm" />);
+    root.render(<App unidad="butik_tiendas_retail" />);
   }
 }
 

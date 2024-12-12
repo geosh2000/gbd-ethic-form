@@ -1,62 +1,67 @@
 /* Stepper.css */
 .stepper-wrapper {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .stepper-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    width: 100px;
-  }
-  
-  .stepper-item::before {
-    content: '';
-    position: absolute;
-    top: 15px;
-    left: -50%;
-    border-radius: 6px;
-    height: 6px;
-    width: 50px;
-    background-color: #ddd;
-    z-index: -1;
-  }
-  
-  .stepper-item:first-child::before {
-    display: none;
-  }
-  
-  .stepper-item.completed::before {
-    background-color: #28a745;
-    margin: 0px 2px;
-    border-radius: 6px;
-    height: 6px;
-    width: 50px;
-  }
-  
-  
-  .step-counter {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #ddd;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    color: white;
-  }
-  
-  .stepper-item.completed .step-counter {
-    background-color: #28a745;
-  }
-  
-  .stepper-item:not(.completed) .step-counter {
-    border: 2px solid #007bff;
-    background-color: white;
-    color: #007bff;
-  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.stepper-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 100px;
+}
+
+.stepper-item::before {
+  content: '';
+  position: absolute;
+  top: 15px;
+  left: -50%;
+  border-radius: 6px;
+  height: 6px;
+  width: 50px;
+/*    background-color: #ddd;*/
+  z-index: -1;
+}
+
+.stepper-item:first-child::before {
+  display: none;
+}
+
+.stepper-item.completed::before {
+/*    background-color: #28a745;*/
+  margin: 0px 2px;
+  border-radius: 6px;
+  height: 6px;
+  width: 50px;
+}
+
+
+.step-counter {
+  width: 56px;
+  height: 56px;
+/*    background: url('assets/Icon-complete.svg') no-repeat center center;*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: #000;
+  padding-left: 4px;
+}
+
+.stepper-item.completed {
+  background: url('assets/Icon-complete.svg') no-repeat center center;
+}
+
+.stepper-item.focus {
+  background: url('assets/Icon-focus.svg') no-repeat center center;
+}
+
+.stepper-item {
+
+  background: url('assets/Icon-disable.svg') no-repeat center center;
+  /*background-color: rgba(255, 255, 255, 0.1);
+  color: #000;*/
+}
