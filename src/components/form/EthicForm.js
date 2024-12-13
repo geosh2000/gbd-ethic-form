@@ -25,6 +25,16 @@ const EthicForm = ( params ) => {
     if (stepper.length > 0) { loadCatalogs() }
   }, [stepper]);
 
+  const handleSubmitForm = async () => {
+    let isValid = await validateData(currentStep);
+
+    if( isValid ){
+      handleSubmit();
+    } else {
+      alert('Por favor, complete todos los campos requeridos.');
+  }
+  }
+
   const handleNextStep = async () => {
     let isValid = await validateData(currentStep);
 
@@ -39,17 +49,6 @@ const EthicForm = ( params ) => {
     } else {
         alert('Por favor, complete todos los campos requeridos.');
     }
-
-    // Default "Denuncia"
-    // const grieveInd = renderForm[currentStep + 1].form['json-schema'].findIndex( input => input.key === 'C::EG::RC-100' )
-    // console.log(catalogs)
-    // if( grieveInd >= 0 ){
-    //   if( formData['C::EG::RC-100'] === undefined ){
-    //     const grieveCat = catalogs['C::EG::RC-100'].find( cat => cat.key === 'grievance' )
-    //     console.log(renderForm[currentStep + 1].form['json-schema'][grieveInd], grieveCat)
-    //     handleInputChange(renderForm[currentStep + 1].form['json-schema'][grieveInd], grieveCat)
-    //   }
-    // }
 
   };
   
@@ -137,7 +136,7 @@ const EthicForm = ( params ) => {
                 <div className="mt-3 d-flex justify-content-end">
                     {currentStep > 0 && <button type="button" className="btn btn-info me-2" onClick={handlePrevStep}>Anterior</button>}
                     {currentStep < stepper.length - 1 && <button type="button" className="btn btn-primary ml-2" onClick={handleNextStep}>Siguiente</button>}
-                    {currentStep === stepper.length - 1 && <button type="button" className="btn btn-success ml-2" onClick={handleSubmit}>Enviar</button>}
+                    {currentStep === stepper.length - 1 && <button type="button" className="btn btn-success ml-2" onClick={handleSubmitForm}>Enviar</button>}
                 </div>
             </form>
           </div>
