@@ -7,7 +7,7 @@ import InputSelector from '../Inputs/InputSelector';
 
 const EthicForm = ( params ) => {
 
-  const { stepper, renderForm, 
+  const { stepper, renderForm, catalogs,
       fetchFormStructure, loadCatalogs, formData,
       currentStep, setCurrentStep, handleInputChange,
       handleSubmit, validateData
@@ -39,6 +39,18 @@ const EthicForm = ( params ) => {
     } else {
         alert('Por favor, complete todos los campos requeridos.');
     }
+
+    // Default "Denuncia"
+    // const grieveInd = renderForm[currentStep + 1].form['json-schema'].findIndex( input => input.key === 'C::EG::RC-100' )
+    // console.log(catalogs)
+    // if( grieveInd >= 0 ){
+    //   if( formData['C::EG::RC-100'] === undefined ){
+    //     const grieveCat = catalogs['C::EG::RC-100'].find( cat => cat.key === 'grievance' )
+    //     console.log(renderForm[currentStep + 1].form['json-schema'][grieveInd], grieveCat)
+    //     handleInputChange(renderForm[currentStep + 1].form['json-schema'][grieveInd], grieveCat)
+    //   }
+    // }
+
   };
   
   const handlePrevStep = () => {

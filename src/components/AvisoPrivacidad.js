@@ -55,7 +55,7 @@ const AvisoPrivacidad = ({ tipoAviso }) => {
     <><div key='privacy'>
       <p className="politica" style={{ fontSize: "10px" }}>
       <strong>AVISO DE PRIVACIDAD</strong> <br></br>
-      Sus datos serán tratados conforme a lo establecido por la Ley Federal de Protección de Datos Personales en Posesión de los Particulares y su Reglamento. Para conocer el Aviso de Privacidad Integral visite <a href="https://www.grupobd.mx/linea-etica/privacidad" style={{ fontSize: "10px", color: "#0076be"}}>https://www.grupobd.mx/linea-etica/privacidad</a> de conformidad con la Ley Federal de Protección de Datos Personales en Posesión de Particulares y su Reglamento.</p>
+      Sus datos serán tratados conforme a lo establecido por la Ley Federal de Protección de Datos Personales en Posesión de los Particulares y su Reglamento. Para conocer el Aviso de Privacidad Integral visite <a href="https://www.grupobd.mx/linea-etica/privacidad" target="_blank" rel="noreferrer" style={{ fontSize: "10px", color: "#0076be"}}>https://www.grupobd.mx/linea-etica/privacidad</a> de conformidad con la Ley Federal de Protección de Datos Personales en Posesión de Particulares y su Reglamento.</p>
     </div>
       </>
   );
