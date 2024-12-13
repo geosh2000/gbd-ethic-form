@@ -54,9 +54,8 @@ const AvisoPrivacidad = ({ tipoAviso }) => {
   return (
     <><div key='privacy'>
       <p className="politica" style={{ fontSize: "10px" }}>
-        Estimado Usuario, le informamos que, previo a seguir con el siguiente paso, requerimos de su consentimiento mediante el presente mecanismo de autenticación, a través del cual autoriza y consiente expresamente para que GrupoBD reciba, trate, utilice, transfiera y proteja los Datos Personales Sensibles que le serán solicitados a continuación para los fines descritos en el Aviso de Privacidad que se puede revisar en el presente sitio
-        <a href="https://www.grupobd.mx/linea-etica" style={{ fontSize: "10px", color: "blue" }}>https://www.grupobd.mx/linea-etica</a>
-        de conformidad con la Ley Federal de Protección de Datos Personales en Posesión de Particulares y su Reglamento.</p>
+      <strong>AVISO DE PRIVACIDAD</strong> <br></br>
+      Sus datos serán tratados conforme a lo establecido por la Ley Federal de Protección de Datos Personales en Posesión de los Particulares y su Reglamento. Para conocer el Aviso de Privacidad Integral visite <a href="https://www.grupobd.mx/linea-etica/privacidad" style={{ fontSize: "10px", color: "#0076be"}}>https://www.grupobd.mx/linea-etica/privacidad</a> de conformidad con la Ley Federal de Protección de Datos Personales en Posesión de Particulares y su Reglamento.</p>
     </div>
       </>
   );
