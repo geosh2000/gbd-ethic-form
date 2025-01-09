@@ -9,6 +9,8 @@ const StringInput = (  params ) => {
     const handleChange = params.handleChange
     const commonProps = params.commonProps
 
+    
+
     return (
       <div key={field.key} className="form-group">
           <label className={`${field.required ? 'label-required' : ''}`} htmlFor={field.key}>{field.label}</label>
@@ -17,6 +19,7 @@ const StringInput = (  params ) => {
                   {...commonProps}
                   rows="4"
                   onChange={(e) => handleChange(field, e.target.value)}
+                  value={formData[field.key]}
               />
           ) : (
               <input

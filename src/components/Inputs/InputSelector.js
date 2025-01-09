@@ -14,6 +14,9 @@ const InputSelector = (  params ) => {
     const field = params.field
     const handleChange = params.handleChange
     const commonProps = params.commonProps
+    const defVal = params.defVal
+
+    console.log(field.key, defVal)
 
     switch (field.type) {
         case 'string':
@@ -28,10 +31,10 @@ const InputSelector = (  params ) => {
           return <RadioConditional field={field} handleChange={handleChange}  commonProps={commonProps}></RadioConditional>
         case 'catalog-select':
         case 'catalog-select-conditional':
-          return <CatalogSelect field={field} handleChange={handleChange} commonProps={commonProps}></CatalogSelect>
+          return <CatalogSelect field={field} handleChange={handleChange} commonProps={commonProps} defVal={defVal}></CatalogSelect>
         case 'checkbox-conditional':
         case 'checkbox':
-          return <CheckBoxConditional field={field} handleChange={handleChange} commonProps={commonProps}></CheckBoxConditional>
+          return <CheckBoxConditional field={field} handleChange={handleChange} commonProps={commonProps} defVal={defVal}></CheckBoxConditional>
         case 'file':
             return <FileInput field={field} handleChange={handleChange}></FileInput>
         case 'involved':

@@ -10,6 +10,7 @@ const CatalogSelect = (  params ) => {
     const field = params.field
     const handleChange = params.handleChange
     const commonProps = params.commonProps
+    const defVal = params.defVal
 
     const customStyles = {
         option: (provided, state) => ({
@@ -45,6 +46,8 @@ const CatalogSelect = (  params ) => {
         }),
     };
 
+    
+
     let child = null
     const thisVal = formData[field.key] || ''
     
@@ -54,7 +57,7 @@ const CatalogSelect = (  params ) => {
 
     return (
         <>
-          <SelectCond key={'select-'+field.key} field={field} handleChange={handleChange} customStyles={customStyles}></SelectCond>
+          <SelectCond key={'select-'+field.key} field={field} handleChange={handleChange} customStyles={customStyles} defVal={defVal}></SelectCond>
          
           {field.conditionals && child !== null && child !== undefined && child.nestChildren &&
           child.nestChildren.map((nestedField, index) => (

@@ -168,7 +168,7 @@ label {
 }
 
 .label-required::after {
-  content: "*";
+  content: " (requerido)";
   color: #0076BE !important; /* Puedes cambiar el color del asterisco si lo deseas */
   margin-left: 1px; /* Espacio entre el texto y el asterisco */
 

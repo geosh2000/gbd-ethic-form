@@ -84,6 +84,11 @@ const EthicForm = ( params ) => {
   
   const renderField = (field, parent) => {
 
+    // Defaults
+    const defaults = {
+      "C::EG::RC-100": 'grievance',
+    }
+
     // Handle change to be modified
     const handleChange = (field, value) => {
         handleInputChange(field, value);
@@ -96,7 +101,7 @@ const EthicForm = ( params ) => {
         placeholder: field.placeholder
     };
 
-    return <InputSelector field={field} handleChange={handleChange} commonProps={commonProps}></InputSelector>
+    return <InputSelector field={field} handleChange={handleChange} commonProps={commonProps} defVal={ defaults[field.key] ?? null}></InputSelector>
 
   };
 
